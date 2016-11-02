@@ -24,37 +24,48 @@ mount /dev/sda1 /mnt/boot
 
 echo "Installing base packages..."
 pacstrap /mnt base base-devel
-arch-chroot /mnt pacman -S syslinux
-
-# generate fstab
-genfstab -p /mnt >> /mnt/etc/fstab
 
 # chroot
 arch-chroot /mnt /bin/bash << EOF
-echo "Configuring hostname..."
-echo "archlinux-$(date -I)" > /etc/hostname
+
+echo "Initilizing locale..."
+echo LANG=en_US.UTF-8 > /etc/locale.conf
+echo "en_US.UTF-8 UTF-8" >> /etc/locale.gen
+echo "en_US ISO-8859-1" >> /etc/locale.gen
+locale-gen
 
 echo "Initilizing timezome..."
 # set initial timezone to Europe/Moscow
 ln -s /usr/share/zoneinfo/Europe/Moscow /etc/localtime
+hwclock --systohc --utc
 
-echo "Initilizing locale..."
-locale >/etc/locale.conf
-echo "en_US.UTF-8 UTF-8" >> /etc/locale.gen
-echo "en_US ISO-8859-1" >> /etc/locale.gen
-locale-gen
+echo "Updating packages..."
+pacman -Sy
+
+echo "Configuring hostname..."
+echo "archlinux-$(date -I)" > /etc/hostname
+
+echo "Configuring network..."
+systemctl enable dhcpcd@enp0s3.service
+
+echo "Installing additional packages..."
+pacman -S -q sudo bash-completion
+
+echo "Configuring root password..."
+echo root:root | chpasswd
 
 echo "Running mkinitcpio..."
 mkinitcpio -p linux
 
 echo "Configuring bootloader..."
-syslinux-install_update -i -a -m
-sed 's/root=\S+/root=\/dev\/sda2/' < /boot/syslinux/syslinux.cfg > /boot/syslinux/syslinux.cfg.new
-mv /boot/syslinux/syslinux.cfg.new /boot/syslinux/syslinux.cfg
+pacman -Sq grub os-prober
+grub-install --target=i386-pc --recheck /dev/sda
+grub-mkconfig -o /boot/grub/grub.cfg
 
-echo "Configuring root password..."
-echo root:root | chpasswd
 EOF
+
+echo "Generating fstab..."
+genfstab -U -p /mnt >> /mnt/etc/fstab
 
 echo "Unmounting paritions..."
 umount /mnt/{boot,}
