@@ -11,6 +11,7 @@ echo "Creating paritions..."
 # /     - /dev/sda2
 parted -s /dev/sda mktable msdos
 parted -s /dev/sda mkpart primary 0% 100m
+parted -s set 1 boot on
 parted -s /dev/sda mkpart primary 100m 100%
 
 echo "Formating paritions..."
