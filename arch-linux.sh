@@ -65,6 +65,10 @@ echo "DHCP=ipv4" >> /etc/systemd/network/host-only.network
 systemctl enable systemd-networkd.service
 systemctl enable systemd-resolved.service
 
+echo "Installing & configuring virtualbox guest utils..."
+pacman -S --noconfirm linux-headers virtualbox-guest-utils-nox
+systemctl enable vboxservice.service
+
 echo "Installing additional packages..."
 pacman -S --noconfirm sudo bash-completion
 
