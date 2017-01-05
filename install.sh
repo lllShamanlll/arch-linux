@@ -78,7 +78,9 @@ pacman -S --noconfirm xorg-server xorg-xinit
 
 # emacs
 pacman -S --noconfirm emacs
-echo "exec emacs" > .xinitrc
+sep="# start some nice programs"
+xinitrcpath="/etc/X11/xinit/xinitrc"
+sed -n "/$sep/i exec emacs" $xinitrcpath | sed -n "/$sep/q;p" > $xinitrcpath
 
 # SLiM
 pacman -S --noconfirm slim
