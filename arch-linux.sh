@@ -81,7 +81,7 @@ pacman -S --noconfirm emacs
 echo "exec emacs" > .xinitrc
 
 # SLiM
-pacman -S slim
+pacman -S --noconfirm slim
 systemctl enable slim.service
 
 EOF
