@@ -66,11 +66,23 @@ systemctl enable systemd-networkd.service
 systemctl enable systemd-resolved.service
 
 echo "Installing & configuring virtualbox guest utils..."
-pacman -S --noconfirm linux-headers virtualbox-guest-utils-nox
+pacman -S --noconfirm linux-headers virtualbox-guest-utils
 systemctl enable vboxservice.service
 
 echo "Installing additional packages..."
 pacman -S --noconfirm sudo bash-completion
+pacman -S --noconfirm git
+
+# X11
+pacman -S --noconfirm xorg-xinit
+
+# emacs
+pacman -S --noconfirm emacs
+echo "exec emacs" > .xinitrc
+
+# SLiM
+pacman -S slim
+systemctl enable slim.service
 
 EOF
 
