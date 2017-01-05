@@ -74,7 +74,7 @@ pacman -S --noconfirm sudo bash-completion
 pacman -S --noconfirm git
 
 # X11
-pacman -S --noconfirm xorg-xinit
+pacman -S --noconfirm xorg-server xorg-xinit
 
 # emacs
 pacman -S --noconfirm emacs
@@ -83,6 +83,9 @@ echo "exec emacs" > .xinitrc
 # SLiM
 pacman -S --noconfirm slim
 systemctl enable slim.service
+
+# fonts
+pacman -S --noconfirm ttf-dejavu
 
 EOF
 
