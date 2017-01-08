@@ -82,6 +82,7 @@ xinitrcsep="# start some nice programs"
 xinitrcpath="/etc/X11/xinit/xinitrc"
 cp \$xinitrxpath \$xinitrcpath.bak
 sed -i "/\$xinitrcsep/i exec emacs" \$xinitrcpath && sed -n -i "/\$xinitrcsep/q;p" \$xinitrcpath
+cp \$xinitrxpath "/root/.xinitrc"
 
 # SLiM
 pacman -S --noconfirm slim
